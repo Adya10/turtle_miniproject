@@ -2,3 +2,7 @@
 /install
 /log
 /.vscode
+
+/src/log
+/src/.vscode
+/src/turtle_move/turtle_move/__pycache__
