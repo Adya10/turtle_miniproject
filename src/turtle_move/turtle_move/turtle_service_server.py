@@ -1,6 +1,8 @@
 import rclpy
 from rclpy.node import Node
 from custom_nodes.srv import ControlTurtle
+from geometry_msgs.msg import Twist
+from std_srvs.srv import Empty
 
 class TurtleServiceServer(Node):
 
@@ -8,26 +10,33 @@ class TurtleServiceServer(Node):
         super().__init__('turtle_service_server')
         self.srv = self.create_service(ControlTurtle, 'control_turtle', self.control_turtle_callback)
         self.get_logger().info('Move server has been started')
-
-        self.turtle_running = False
+        self.publisher = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+        self.reset_service = self.create_client(Empty, '/reset')
+        
 
     def control_turtle_callback(self, request, response):
         command = request.command.lower()
+        twist = Twist()
 
         if command == 'start':
-            self.turtle_running = True
+            twist.linear.x = 2.0
+            twist.angular.z = 1.0
+            self.publisher.publish(twist)
             response.success = True
             response.message = 'Turtle has started moving'
 
         elif command == 'stop':
-            self.turtle_running = False
+            twist.linear.x = 0.0
+            twist.angular.z = 0.0
+            self.publisher.publish(twist)
             response.success = True
             response.message = 'Turtle has stopped moving'
 
         elif command == 'reset':
-            self.turtle_running = False
+            req = Empty.Request()
+            self.reset_service.call_async(req)
             response.success = True
-            response.message = 'Turtle has been reset to initial position'
+            response.message = 'Turtle has been reset to origin'
 
         else:
             response.success = False
