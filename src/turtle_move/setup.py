@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            "turtle_service_server = turtle_move.turtle_service_server:main"
         ],
     },
 )

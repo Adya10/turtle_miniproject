@@ -24,7 +24,7 @@ class TurtleServiceServer(Node):
             response.success = True
             response.message = 'Turtle has stopped moving'
 
-        elif command == 'start':
+        elif command == 'reset':
             self.turtle_running = False
             response.success = True
             response.message = 'Turtle has been reset to initial position'
@@ -36,9 +36,6 @@ class TurtleServiceServer(Node):
         self.get_logger().info(f'Recieving command {command}')
 
         return response
-
-
-
 
 def main(args=None):
     rclpy.init(args=args)
